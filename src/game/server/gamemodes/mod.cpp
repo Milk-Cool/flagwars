@@ -70,12 +70,14 @@ bool CGameControllerMOD::DoWincheckMatch()
 	if(getTeamSize(TEAM_BLUE) == 0 && m_apFlags[TEAM_BLUE]->FWHidden())
 	{
 		GameServer()->Console()->Print(IConsole::OUTPUT_LEVEL_DEBUG, "debug", "red win");
+		m_aTeamscore[TEAM_RED] = 999;
 		EndMatch();
 		return true;
 	}
 	if(getTeamSize(TEAM_RED) == 0 && m_apFlags[TEAM_RED]->FWHidden())
 	{
 		GameServer()->Console()->Print(IConsole::OUTPUT_LEVEL_DEBUG, "debug", "blue win");
+		m_aTeamscore[TEAM_BLUE] = 999;
 		EndMatch();
 		return true;
 	}
@@ -208,10 +210,6 @@ void CGameControllerMOD::Tick()
 				}
 				else
 				{
-					// take the flag
-					if(F->IsAtStand())
-						m_aTeamscore[fi^1]++;
-
 					F->FWHide();
 
 					// char aBuf[256];
