@@ -1,5 +1,7 @@
 /* (c) Magnus Auvinen. See licence.txt in the root of the distribution for more information. */
 /* If you are missing that file, acquire a complete release at teeworlds.com.                */
+#include <limits>
+
 #include <game/server/gamecontext.h>
 #include <game/server/gamecontroller.h>
 
@@ -43,6 +45,12 @@ void CFlag::Drop()
 
 void CFlag::TickDefered()
 {
+	if(m_Hidden)
+	{
+		m_Pos.x = std::numeric_limits<float>::max();
+		m_Pos.y = std::numeric_limits<float>::max();
+		return;
+	}
 	if(m_pCarrier)
 	{
 		// update flag position
@@ -93,4 +101,18 @@ void CFlag::Snap(int SnappingClient)
 	pFlag->m_X = round_to_int(m_Pos.x);
 	pFlag->m_Y = round_to_int(m_Pos.y);
 	pFlag->m_Team = m_Team;
+}
+
+void CFlag::FWHide()
+{
+	m_Hidden = true;
+}
+void CFlag::FWUnhide()
+{
+	m_Hidden = false;
+}
+
+bool CFlag::FWHidden()
+{
+	return m_Hidden;
 }

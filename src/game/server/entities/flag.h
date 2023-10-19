@@ -18,6 +18,7 @@ private:
 	vec2 m_Vel;
 	int m_GrabTick;
 	int m_DropTick;
+	bool m_Hidden = false;
 
 public:
 	/* Constants */
@@ -42,6 +43,9 @@ public:
 	/* Functions */
 	void Grab(class CCharacter *pChar);
 	void Drop();
+	void FWHide();
+	void FWUnhide();
+	bool FWHidden();
 };
 
 #endif

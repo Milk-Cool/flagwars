@@ -1607,7 +1607,7 @@ void CGameContext::OnInit()
 	m_Collision.Init(&m_Layers);
 
 	// select gametype
-	if(str_comp_nocase(Config()->m_SvGametype, "mod") == 0)
+	if(str_comp_nocase(Config()->m_SvGametype, "fw") == 0)
 		m_pController = new CGameControllerMOD(this);
 	else if(str_comp_nocase(Config()->m_SvGametype, "ctf") == 0)
 		m_pController = new CGameControllerCTF(this);
@@ -1732,3 +1732,10 @@ const char *CGameContext::NetVersionHashUsed() const { return GAME_NETVERSION_HA
 const char *CGameContext::NetVersionHashReal() const { return GAME_NETVERSION_HASH; }
 
 IGameServer *CreateGameServer() { return new CGameContext; }
+
+void CGameContext::set_global_flags(class CFlag *flags[2]) {
+	global_flags = flags;
+}
+void CGameContext::set_GameController(class IGameController *controller) {
+	m_GameController = controller;
+}

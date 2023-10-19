@@ -6,9 +6,13 @@
 #include <engine/console.h>
 #include <engine/server.h>
 
+#include "gamecontroller.h"
+
 #include <game/commands.h>
 #include <game/layers.h>
 #include <game/voting.h>
+
+#include "entities/flag.h"
 
 #include "eventhandler.h"
 #include "gameworld.h"
@@ -196,6 +200,12 @@ public:
 	virtual const char *NetVersion() const;
 	virtual const char *NetVersionHashUsed() const;
 	virtual const char *NetVersionHashReal() const;
+
+	class CFlag **global_flags;
+	void set_global_flags(class CFlag *flags[2]);
+
+	class IGameController *m_GameController;
+	void set_GameController(class IGameController *m_GameController);
 };
 
 inline int64 CmaskAll() { return -1; }

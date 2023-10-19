@@ -3,14 +3,35 @@
 #ifndef GAME_SERVER_GAMEMODES_MOD_H
 #define GAME_SERVER_GAMEMODES_MOD_H
 #include <game/server/gamecontroller.h>
+#include <game/server/entity.h>
 
-// you can subclass GAMECONTROLLER_CTF, GAMECONTROLLER_TDM etc if you want
-// todo a modification with their base as well.
 class CGameControllerMOD : public IGameController
 {
+	// balancing
+	virtual bool CanBeMovedOnBalance(int ClientID) const;
+
+	// game
+	class CFlag *m_apFlags[2];
+
+	// context
+	class CGameContext *m_Context;
+
+	virtual bool DoWincheckMatch();
+
 public:
 	CGameControllerMOD(class CGameContext *pGameServer);
+	
+	// event
+	virtual int OnCharacterDeath(class CCharacter *pVictim, class CPlayer *pKiller, int Weapon);
+	virtual void OnFlagReturn(class CFlag *pFlag);
+	virtual bool OnEntity(int Index, vec2 Pos);
+
+	void OnReset() override;
+
+	// general
+	virtual void Snap(int SnappingClient);
 	virtual void Tick();
-	// add more virtual functions here if you wish
 };
+
 #endif
+

@@ -16,7 +16,10 @@
 		winning conditions and specific game logic.
 */
 class IGameController
-{
+{	
+	void* m_pPlayers[9999];
+	int m_pPlayersIndex = 0;
+
 	class CGameContext *m_pGameServer;
 	class CConfig *m_pConfig;
 	class IServer *m_pServer;
@@ -171,7 +174,7 @@ public:
 	virtual void OnPlayerReadyChange(class CPlayer *pPlayer);
 	void OnPlayerCommand(class CPlayer *pPlayer, const char *pCommandName, const char *pCommandArgs);
 
-	void OnReset();
+	virtual void OnReset();
 
 	// game
 	enum
@@ -231,6 +234,17 @@ public:
 
 	//static void Com_Example(IConsole::IResult *pResult, void *pContext);
 	virtual void RegisterChatCommands(CCommandManager *pManager);
+
+	int getTeamSize(int team);
+	void decTeamSize(int team);
+
+	int m_pForcedSpectators[64];
+	int m_pForcedSpectatorsIndex = 0;
+	void AddForcedSpectator(int player);
+	void ClearForcedSpectators();
+
+	void** GetPlayers();
+	int GetPlayersCount();
 };
 
 #endif

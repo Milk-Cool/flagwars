@@ -778,6 +778,14 @@ bool CCharacter::TakeDamage(vec2 Force, vec2 Source, int Dmg, int From, int Weap
 	// check for death
 	if(m_Health <= 0)
 	{
+		for(int fi = 0; fi < 2; fi++)
+			if(GetPlayer() && GameServer()->global_flags && GameServer()->global_flags[fi]->FWHidden() &&
+					GameServer()->m_GameController && GetPlayer()->GetTeam() == GameServer()->global_flags[fi]->GetTeam()) {
+				// GameServer()->m_GameController->decTeamSize(GetPlayer()->GetTeam());
+				GameServer()->m_GameController->AddForcedSpectator(GetPlayer()->GetCID());
+				GameServer()->m_GameController->DoTeamChange(GetPlayer(), TEAM_SPECTATORS, false);
+				return true;
+			}
 		Die(From, Weapon);
 
 		// set attacker's face to happy (taunt!)

@@ -314,6 +314,8 @@ void IGameController::OnPlayerConnect(CPlayer *pPlayer)
 	int ClientID = pPlayer->GetCID();
 	pPlayer->Respawn();
 
+	m_pPlayers[m_pPlayersIndex++] = pPlayer;
+
 	char aBuf[128];
 	str_format(aBuf, sizeof(aBuf), "team_join player='%d:%s' team=%d", ClientID, Server()->ClientName(ClientID), pPlayer->GetTeam());
 	GameServer()->Console()->Print(IConsole::OUTPUT_LEVEL_DEBUG, "game", aBuf);
@@ -324,6 +326,8 @@ void IGameController::OnPlayerConnect(CPlayer *pPlayer)
 
 void IGameController::OnPlayerDisconnect(CPlayer *pPlayer)
 {
+	--m_pPlayersIndex;
+
 	pPlayer->OnDisconnect();
 
 	int ClientID = pPlayer->GetCID();
@@ -1219,4 +1223,30 @@ int IGameController::GetStartTeam()
 void IGameController::RegisterChatCommands(CCommandManager *pManager)
 {
 	//pManager->AddCommand("test", "Test the command system", "r", Com_Example, this);
+}
+
+int IGameController::getTeamSize(int team)
+{
+	return m_aTeamSize[team];
+}
+
+void IGameController::decTeamSize(int team)
+{
+	m_aTeamSize[team]--;
+}
+
+void** IGameController::GetPlayers() {
+	return m_pPlayers;
+}
+
+int IGameController::GetPlayersCount() {
+	return m_pPlayersIndex;
+}
+
+void IGameController::AddForcedSpectator(int cid) {
+	m_pForcedSpectators[m_pForcedSpectatorsIndex++] = cid;
+}
+
+void IGameController::ClearForcedSpectators() {
+	m_pForcedSpectatorsIndex = 0;
 }
