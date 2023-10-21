@@ -26,6 +26,7 @@ void CFlag::Reset()
 	m_Pos = m_StandPos;
 	m_Vel = vec2(0, 0);
 	m_GrabTick = 0;
+	m_Health = 200;
 }
 
 bool CFlag::TakeDamage(int Dmg)
