@@ -28,6 +28,27 @@ void CFlag::Reset()
 	m_GrabTick = 0;
 }
 
+bool CFlag::TakeDamage(int Dmg)
+{
+	m_Health -= Dmg;
+
+	char* aBuf = (char*)malloc(sizeof(char) * 64);
+	str_format(aBuf, 64, "Flag damaged, remaining health: %d", m_Health);
+	GameServer()->Console()->Print(0, "debug", aBuf, true);
+	free(aBuf);
+
+	// check for death
+	if(m_Health <= 0)
+	{
+		FWHide();
+
+		return false;
+	}
+
+	return true;
+}
+
+
 void CFlag::Grab(CCharacter *pChar)
 {
 	m_pCarrier = pChar;

@@ -69,14 +69,14 @@ bool CGameControllerMOD::DoWincheckMatch()
 	// check score win condition
 	if(getTeamSize(TEAM_BLUE) == 0 && m_apFlags[TEAM_BLUE]->FWHidden())
 	{
-		GameServer()->Console()->Print(IConsole::OUTPUT_LEVEL_DEBUG, "debug", "red win");
+		// GameServer()->Console()->Print(IConsole::OUTPUT_LEVEL_DEBUG, "debug", "red win");
 		m_aTeamscore[TEAM_RED] = 999;
 		EndMatch();
 		return true;
 	}
 	if(getTeamSize(TEAM_RED) == 0 && m_apFlags[TEAM_RED]->FWHidden())
 	{
-		GameServer()->Console()->Print(IConsole::OUTPUT_LEVEL_DEBUG, "debug", "blue win");
+		// GameServer()->Console()->Print(IConsole::OUTPUT_LEVEL_DEBUG, "debug", "blue win");
 		m_aTeamscore[TEAM_BLUE] = 999;
 		EndMatch();
 		return true;
@@ -131,6 +131,13 @@ void CGameControllerMOD::Tick()
 	m_Context->set_GameController(this);
 
 	IGameController::Tick();
+
+	for(int i = 0; i < GetPlayersCount(); i++) {
+		char* FlagsMsg = (char*)malloc(sizeof(char) * 64);
+		str_format(FlagsMsg, 64, "Red flag HP: %d | Blue flag HP: %d", maximum(m_apFlags[TEAM_RED]->m_Health, 0), maximum(m_apFlags[TEAM_BLUE]->m_Health, 0));
+		GameServer()->SendBroadcast(FlagsMsg, ((CPlayer**)GetPlayers())[i]->GetCID());
+		free(FlagsMsg);
+	}
 
 	if(GameServer()->m_World.m_ResetRequested || GameServer()->m_World.m_Paused)
 		return;
@@ -210,7 +217,7 @@ void CGameControllerMOD::Tick()
 				}
 				else
 				{
-					F->FWHide();
+					// F->FWHide();
 
 					// char aBuf[256];
 					// str_format(aBuf, sizeof(aBuf), "flag_grab player='%d:%s' team=%d",
@@ -219,7 +226,7 @@ void CGameControllerMOD::Tick()
 					// 	F->GetCarrier()->GetPlayer()->GetTeam()
 					// );
 					// GameServer()->Console()->Print(IConsole::OUTPUT_LEVEL_DEBUG, "game", aBuf);
-					GameServer()->SendGameMsg(GAMEMSG_CTF_GRAB, fi, -1);
+					// GameServer()->SendGameMsg(GAMEMSG_CTF_GRAB, fi, -1);
 					break;
 				}
 			}

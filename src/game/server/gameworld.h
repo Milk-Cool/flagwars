@@ -148,6 +148,8 @@ public:
 
 	*/
 	void Tick();
+
+	void* IntersectFlag(vec2 Pos0, vec2 Pos1, float Radius, vec2& NewPos);
 };
 
 #endif

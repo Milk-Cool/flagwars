@@ -259,3 +259,29 @@ CEntity *CGameWorld::ClosestEntity(vec2 Pos, float Radius, int Type, CEntity *pN
 
 	return pClosest;
 }
+
+void *CGameWorld::IntersectFlag(vec2 Pos0, vec2 Pos1, float Radius, vec2& NewPos)
+{
+	// Find other players
+	float ClosestLen = distance(Pos0, Pos1) * 100.0f;
+	CFlag *FClosest = 0;
+
+	CFlag *F = (CFlag *)FindFirst(ENTTYPE_FLAG);
+	for(; F; F = (CFlag *)F->TypeNext())
+ 	{
+		vec2 IntersectPos = closest_point_on_line(Pos0, Pos1, F->m_Pos);
+		float Len = distance(F->m_Pos, IntersectPos);
+		if(Len < F->m_ProximityRadius+Radius)
+		{
+			Len = distance(Pos0, IntersectPos);
+			if(Len < ClosestLen)
+			{
+				NewPos = IntersectPos;
+				ClosestLen = Len;
+				FClosest = F;
+			}
+		}
+	}
+
+	return (void*)FClosest;
+}

@@ -135,10 +135,12 @@ void CGameContext::CreateExplosion(vec2 Pos, int Owner, int Weapon, int MaxDamag
 
 	// deal damage
 	CCharacter *apEnts[MAX_CLIENTS];
+	CFlag *apFlags[2];
 	float Radius = g_pData->m_Explosion.m_Radius;
 	float InnerRadius = 48.0f;
 	float MaxForce = g_pData->m_Explosion.m_MaxForce;
 	int Num = m_World.FindEntities(Pos, Radius, (CEntity**)apEnts, MAX_CLIENTS, CGameWorld::ENTTYPE_CHARACTER);
+	int NumFlags = m_World.FindEntities(Pos, Radius, (CEntity**)apFlags, 2, CGameWorld::ENTTYPE_FLAG);
 	for(int i = 0; i < Num; i++)
 	{
 		vec2 Diff = apEnts[i]->GetPos() - Pos;
@@ -150,6 +152,15 @@ void CGameContext::CreateExplosion(vec2 Pos, int Owner, int Weapon, int MaxDamag
 		if((int)(Factor * MaxDamage))
 			apEnts[i]->TakeDamage(Force * Factor, Diff*-1, (int)(Factor * MaxDamage), Owner, Weapon);
 	}
+	if(!str_comp(GameType(), "FW"))
+		for(int i = 0; i < NumFlags; i++)
+		{
+			vec2 Diff = apFlags[i]->GetPos() - Pos;
+			float l = length(Diff);
+			float Factor = 1 - clamp((l-InnerRadius)/(Radius-InnerRadius), 0.0f, 1.0f);
+			if((int)(Factor * MaxDamage))
+				apFlags[i]->TakeDamage((int)(Factor * MaxDamage));
+		}
 }
 
 void CGameContext::CreatePlayerSpawn(vec2 Pos)

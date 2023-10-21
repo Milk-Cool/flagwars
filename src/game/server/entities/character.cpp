@@ -298,9 +298,12 @@ void CCharacter::FireWeapon()
 			GameServer()->CreateSound(m_Pos, SOUND_HAMMER_FIRE);
 
 			CCharacter *apEnts[MAX_CLIENTS];
+			CFlag *apFlags[2];
 			int Hits = 0;
 			int Num = GameWorld()->FindEntities(ProjStartPos, GetProximityRadius()*0.5f, (CEntity**)apEnts,
 														MAX_CLIENTS, CGameWorld::ENTTYPE_CHARACTER);
+			int NumFlags = GameWorld()->FindEntities(ProjStartPos, GetProximityRadius()*0.5f, (CEntity**)apFlags,
+														2, CGameWorld::ENTTYPE_FLAG);
 
 			for(int i = 0; i < Num; ++i)
 			{
@@ -324,6 +327,14 @@ void CCharacter::FireWeapon()
 				pTarget->TakeDamage(vec2(0.f, -1.f) + normalize(Dir + vec2(0.f, -1.1f)) * 10.0f, Dir*-1, g_pData->m_Weapons.m_Hammer.m_pBase->m_Damage,
 					m_pPlayer->GetCID(), m_ActiveWeapon);
 				Hits++;
+			}
+
+			for(int i = 0; i < NumFlags; ++i)
+			{
+				CFlag *F = apFlags[i];
+
+				if(!str_comp(GameServer()->GameType(), "FW"))
+					F->TakeDamage(g_pData->m_Weapons.m_Hammer.m_pBase->m_Damage);
 			}
 
 			// if we Hit anything, we have to wait for the reload

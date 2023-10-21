@@ -21,6 +21,8 @@ private:
 	bool m_Hidden = false;
 
 public:
+	int m_Health = 200;
+	
 	/* Constants */
 	static int const ms_PhysSize = 14;
 
@@ -46,6 +48,8 @@ public:
 	void FWHide();
 	void FWUnhide();
 	bool FWHidden();
+
+	bool TakeDamage(int Dmg);
 };
 
 #endif

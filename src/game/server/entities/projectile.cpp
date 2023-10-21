@@ -75,6 +75,7 @@ void CProjectile::Tick()
 	int Collide = GameServer()->Collision()->IntersectLine(PrevPos, CurPos, &CurPos, 0);
 	CCharacter *OwnerChar = GameServer()->GetPlayerChar(m_Owner);
 	CCharacter *TargetChr = GameWorld()->IntersectCharacter(PrevPos, CurPos, 6.0f, CurPos, OwnerChar);
+	CFlag *TargetFlag = (CFlag*)GameWorld()->IntersectFlag(PrevPos, CurPos, 64.0f, CurPos);
 
 	m_LifeSpan--;
 
@@ -88,6 +89,9 @@ void CProjectile::Tick()
 
 		else if(TargetChr)
 			TargetChr->TakeDamage(m_Direction * maximum(0.001f, m_Force), m_Direction*-1, m_Damage, m_Owner, m_Weapon);
+		
+		else if(!str_comp(GameServer()->GameType(), "FW") && TargetFlag && OwnerChar->GetPlayer()->GetTeam() != TargetFlag->GetTeam())
+			TargetFlag->TakeDamage(m_Damage);
 
 		GameWorld()->DestroyEntity(this);
 	}
